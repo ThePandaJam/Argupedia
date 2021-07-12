@@ -1,6 +1,7 @@
 import { Container, Flex, Spinner, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import Navbar from "./components/navbar";
+import AddNewPost from "./components/AddNewPost";
+import NavBar from "./components/navbar/Header";
 import Post from "./components/post";
 import db from "./lib/firebase";
 
@@ -55,8 +56,9 @@ const App = () => {
 
   return (
     <>
-      <Navbar />
+      <NavBar />
       <Container maxW="md" centerContent p={8}>
+        <AddNewPost spacing={8}/>
         <VStack spacing={8} w="100%">
           {posts.map((post) => (
             <Post post={post} key={post.id} />

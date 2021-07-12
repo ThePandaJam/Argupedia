@@ -1,7 +1,10 @@
 import {
   Button,
+  Text,
+  Box,
   FormControl,
   FormLabel,
+  IconButton,
   Textarea,
   Modal,
   ModalBody,
@@ -11,10 +14,11 @@ import {
   ModalHeader,
   ModalOverlay,
   HStack,
-  useDisclosure,
+  useDisclosure
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import db from "../lib/firebase";
+import { BiPencil } from "react-icons/bi";
 
 const AddNewPost = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,9 +45,23 @@ const AddNewPost = () => {
 
   return (
     <>
-      <Button onClick={onOpen} colorScheme="blue">
-        Add new post
-      </Button>
+      
+    <HStack onClick={onOpen} w="100%" alignItems="flex-start" marginBottom="30px" >
+      <IconButton
+            size="lg"
+            colorScheme="purple"
+            aria-label="NewPost"
+            icon={<BiPencil />}
+            color={["primary.500", "primary.500", "white", "white"]}
+            bg={["white", "white", "primary.500", "primary.500"]}
+            _hover={{
+              bg: ["primary.100", "primary.100", "primary.600", "primary.600"]
+            }}
+          />
+      <Box bg="gray.100" p={4} rounded="md" w="100%">
+        <Textarea placeholder = "Start a new argument"/>
+      </Box>
+    </HStack>
 
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay>

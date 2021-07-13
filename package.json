@@ -5,6 +5,7 @@
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "@reach/router": "1.3.4",
     "firebase": "^8.7.1",
     "framer-motion": "^3.10.0",
     "react": "^17.0.2",

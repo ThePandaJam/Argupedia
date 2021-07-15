@@ -3,18 +3,30 @@
 import React, { useState } from "react";
 import { Link as ReachLink } from "@reach/router";
 import { Link, Box, Flex, Text, Button, Heading, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { auth, signInWithGoogle, generateUserDocument } from "../../lib/firebase";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [error, setError] = useState(null);
-  const createUserWithEmailAndPasswordHandler = (event, email, password) => {
+
+  const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
     event.preventDefault();
+    try{
+      const {user} = await auth.createUserWithEmailAndPassword(email, password);
+      generateUserDocument(user, {displayName});
+    }
+    catch(error){
+      setError('Error Signing up with email and password');
+    }
+
     setEmail("");
     setPassword("");
     setDisplayName("");
   };
+
+  
   const onChangeHandler = event => {
     const { name, value } = event.currentTarget;
     if (name === "userEmail") {
@@ -34,9 +46,9 @@ const SignUp = () => {
             </Box>
             <Box my={4} textAlign="left">
                 {error !== null && (
-                    <div className="py-4 bg-red-600 w-full text-white text-center mb-3">
+                    <Text color="red">
                         {error}
-                    </div>
+                    </Text>
                 )}
                 <form>
                     <FormControl isRequired>
@@ -74,7 +86,16 @@ const SignUp = () => {
             }}>
                         Sign Up
                     </Button>
-                    <Button width="full" colorScheme="red">Sign in with Google</Button>
+                    <Button 
+                      width="full" 
+                      colorScheme="red" 
+                      onClick={() => {
+                        try {
+                          signInWithGoogle();
+                        } catch (error) {
+                          console.error("Error signing in with Google", error);
+                        }
+                      }}>Sign in with Google</Button>
                     <Box my={4} textAlign="center">
                         <Text>Already have an account?</Text>
                         <Link as={ReachLink} colorScheme="blue" to = "/">Sign in here</Link>

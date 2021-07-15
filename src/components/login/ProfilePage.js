@@ -1,7 +1,7 @@
 // https://chakra-templates.dev/page-sections/features
 // https://chakra-templates.dev/components/cards
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
-import React from "react";
+import React , { useContext } from "react";
 import {
     Box,
     Center,
@@ -15,8 +15,11 @@ import {
     Container,
     SimpleGrid,
     Icon,
+    Button,
   } from '@chakra-ui/react';
-  import { BiPencil } from "react-icons/bi";
+import { BiPencil } from "react-icons/bi";
+import { UserContext } from "../../providers/UserProvider";
+import {auth} from "../../lib/firebase";
 
 const IMAGE = `https://res.cloudinary.com/dqcsk8rsc/image/upload/v1577268053/avatar-1-bitmoji_upgwhc.png`;
 
@@ -30,7 +33,9 @@ const userPosts = Array.apply(null, Array(8)).map(function (x, i) {
   });
   
 const ProfilePage = () => {
-  return (
+    const user = useContext(UserContext);
+    const {photoURL, displayName, email} = user;
+    return (
         <Box p={4}>
             <Center py={12}>
                 <Box
@@ -70,24 +75,29 @@ const ProfilePage = () => {
                                 height={230}
                                 width={282}
                                 objectFit={'cover'}
-                                src={IMAGE}
+                                src={`url(${photoURL || IMAGE})`}
                             />
                     </Box>
                     <Stack pt={10} align={'center'}>
-                        <Text color={'gray.500'} fontSize={'sm'} textTransform={'uppercase'}>
-                            Brand
-                        </Text>
                         <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
-                            Nice Chair, pink
+                            {displayName}
                         </Heading>
                         <Stack direction={'row'} align={'center'}>
                             <Text fontWeight={800} fontSize={'xl'}>
-                                $57
-                            </Text>
-                            <Text textDecoration={'line-through'} color={'gray.600'}>
-                                $199
+                                {email}
                             </Text>
                         </Stack>
+                        <Button
+                            size="sm"
+                            rounded="md"
+                            color={["primary.500", "primary.500", "white", "white"]}
+                            bg={["white", "white", "primary.500", "primary.500"]}
+                            _hover={{
+                            bg: ["primary.100", "primary.100", "primary.600", "primary.600"]
+                            }}
+                            onClick = {() => {auth.signOut()}}>
+                            Sign out
+                        </Button>
                     </Stack>
                 </Box>
             </Center>
@@ -136,6 +146,6 @@ const ProfilePage = () => {
     //   </div>
     //   <button className = "w-full py-3 bg-red-600 mt-4 text-white">Sign out</button>
     // </div>
-  ); 
+    ); 
 };
 export default ProfilePage;

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Link as ReachLink } from "@reach/router";
 import { Link, Box, Flex, Text, Button, Heading, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { auth } from "../../lib/firebase";
 
 
 const PasswordReset = () => {
@@ -17,7 +18,17 @@ const PasswordReset = () => {
   };
   const sendResetEmail = event => {
     event.preventDefault();
+    auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        setEmailHasBeenSent(true);
+        setTimeout(() => {setEmailHasBeenSent(false)}, 3000);
+      })
+      .catch(() => {
+        setError("Error resetting password");
+      });
   };
+
   return (
     <Flex width="full" align="center" justifyContent="center">
     <Box p={8} maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg">
@@ -25,10 +36,9 @@ const PasswordReset = () => {
         <Heading>Reset your Password</Heading>
       </Box>
       <Box my={4} textAlign="left">
-      {error !== null && <div className = "py-4 bg-red-600 w-full text-white text-center mb-3">{error}</div>}
         <form action="">
             {emailHasBeenSent && (
-                <Text>
+                <Text color="blue">
                 An email has been sent to you!
                 </Text>
             )}
@@ -47,7 +57,9 @@ const PasswordReset = () => {
               id="userEmail"
               onChange = {onChangeHandler} />
           </FormControl>
-          <Button width="full" marginBottom="10px" mt={4} type="submit">
+          <Button width="full" marginBottom="10px" mt={4} type="submit" onClick={event => {
+              sendResetEmail(event);
+            }}>
             Send me a reset link
           </Button>
           <Box my={4} textAlign="center">

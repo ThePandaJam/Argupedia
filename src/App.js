@@ -4,11 +4,10 @@ import { Router } from "@reach/router";
 import AddNewPost from "./components/AddNewPost";
 import NavBar from "./components/navbar/Header";
 import Post from "./components/post";
-import db from "./lib/firebase";
-import SignIn from "./components/login/SignIn";
-import SignUp from "./components/login/SignUp";
-import ProfilePage from "./components/login/ProfilePage";
-import PasswordReset from "./components/login/PasswordReset";
+import { firestore } from "./lib/firebase";
+
+import Application from "./components/Application";
+import UserProvider from "./providers/UserProvider";
 
 // const App = () => {
 //   const [posts, setPosts] = useState([]);
@@ -17,7 +16,7 @@ import PasswordReset from "./components/login/PasswordReset";
 //   useEffect(() => {
 //     // Hook to handle the initial fetching of posts
 
-//     db.collection("posts")
+//     firestore.collection("posts")
 //       .orderBy("createdAt", "desc")
 //       .get()
 //       .then((querySnapshot) => {
@@ -35,7 +34,7 @@ import PasswordReset from "./components/login/PasswordReset";
 //     // Hook to handle the real-time updating of posts whenever there is a
 //     // change in the datastore (https://firebase.google.com/docs/firestore/query-data/listen#view_changes_between_snapshots)
 
-//     db.collection("posts")
+//     firestore.collection("posts")
 //       .orderBy("createdAt", "desc")
 //       .onSnapshot((querySnapshot) => {
 //         const _posts = [];
@@ -77,15 +76,9 @@ import PasswordReset from "./components/login/PasswordReset";
 const App = () => {
   const user = null;
   return (
-        user ?
-        <ProfilePage />
-      :
-        <Router>
-          <SignUp path="signUp" />
-          <SignIn path="/" />
-          <PasswordReset path = "passwordReset" />
-        </Router>
-
+    <UserProvider>
+      <Application />
+    </UserProvider>
   );
 
 };

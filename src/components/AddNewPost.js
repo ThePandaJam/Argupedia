@@ -17,7 +17,7 @@ import {
   useDisclosure
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import db from "../lib/firebase";
+import { firestore } from "../lib/firebase";
 import { BiPencil } from "react-icons/bi";
 
 const AddNewPost = () => {
@@ -30,7 +30,7 @@ const AddNewPost = () => {
 
     const date = new Date();
 
-    await db.collection("posts").add({
+    await firestore.collection("posts").add({
       title,
       upVotesCount: 0,
       downVotesCount: 0,

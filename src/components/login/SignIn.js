@@ -2,27 +2,29 @@
 import React, {useState} from "react";
 import { Link as ReachLink } from "@reach/router";
 import { Link, Box, Flex, Text, Button, Heading, FormControl, FormLabel, Input } from "@chakra-ui/react";
-
+import {auth, signInWithGoogle} from "../../lib/firebase";
 
 const SignIn = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
-    const signInWithEmailAndPasswordHandler = 
-            (event,email, password) => {
-                event.preventDefault();
+    const onChangeHandler = (event) => {
+        const {name, value} = event.currentTarget;
+
+        if(name === 'userEmail') {
+            setEmail(value);
+        }
+        else if(name === 'userPassword'){
+          setPassword(value);
+        }
     };
-
-      const onChangeHandler = (event) => {
-          const {name, value} = event.currentTarget;
-
-          if(name === 'userEmail') {
-              setEmail(value);
-          }
-          else if(name === 'userPassword'){
-            setPassword(value);
-          }
-      };
+    const signInWithEmailAndPasswordHandler = (event, email, password) => {
+      event.preventDefault();
+      auth.signInWithEmailAndPassword(email, password).catch(error => {
+        setError("Error signing in with password and email!");
+        console.error("Error signing in with password and email", error);
+      });
+    };
 
   return (
     <Flex width="full" align="center" justifyContent="center">
@@ -31,7 +33,7 @@ const SignIn = () => {
           <Heading>Log in</Heading>
         </Box>
         <Box my={4} textAlign="left">
-        {error !== null && <div className = "py-4 bg-red-600 w-full text-white text-center mb-3">{error}</div>}
+        {error !== null && <Text>{error}</Text>}
           <form>
             <FormControl isRequired>
               <FormLabel>Email</FormLabel>
@@ -56,7 +58,16 @@ const SignIn = () => {
             <Button width="full" marginBottom="10px" mt={4} type="submit" onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}>
               Sign In
             </Button>
-            <Button width="full" colorScheme="red">Sign in with Google</Button>
+            <Button 
+                      width="full" 
+                      colorScheme="red" 
+                      onClick={() => {
+                        try {
+                          signInWithGoogle();
+                        } catch (error) {
+                          console.error("Error signing in with Google", error);
+                        }
+                      }}>Sign in with Google</Button>
             <Box my={4} textAlign="center">
                 <Text>Don't have an account?</Text>
                 <Link as={ReachLink} colorScheme="blue" to = "/signUp">Sign up here</Link>

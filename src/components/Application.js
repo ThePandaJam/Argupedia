@@ -1,28 +1,28 @@
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 
 import React, { useContext } from "react";
-import { Router } from "@reach/router";
 import { UserContext } from "../providers/UserProvider";
-import UserProvider from "../providers/UserProvider";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 import ProfilePage from "./login/ProfilePage";
-import PasswordReset from "./login/PasswordReset";
-import SignIn from "./login/SignIn"
+import ForgotPassword from "./login/ForgotPassword";
+import LogIn from "./login/LogIn"
 import SignUp from "./login/SignUp"
+import PrivateRoute from "./login/PrivateRoute";
 
 
 
 function Application() {
   const user = useContext(UserContext);
   return (
-        user ?
-        <ProfilePage path="profile" />
-      :
-        <Router>
-          <SignUp path="signUp" />
-          <SignIn path="/" />
-          <PasswordReset path = "passwordReset" />
-        </Router>
+    <Router>
+        <Switch>
+          <PrivateRoute path="/profile" component={ProfilePage} />
+          <Route path="/signUp" component={SignUp} />
+          <Route path="/login" component={LogIn} />
+          <Route path="/forgotPassword" component={ForgotPassword} />
+        </Switch>
+    </Router>
 
   );
 }

@@ -2,7 +2,7 @@
 // https://github.com/WebDevSimplified/React-Firebase-Auth
 
 import React, { useState } from "react";
-import { auth, signInWithGoogle, generateUserDocument } from "../../lib/firebase";
+import { auth, signInWithGoogle } from "../../lib/firebase";
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
 
@@ -12,8 +12,6 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const history = useHistory()
 
   const onChangeHandler = event => {
@@ -22,39 +20,29 @@ const SignUp = () => {
       setEmail(value);
     } else if (name === "userPassword") {
       setPassword(value);
-    } else if (name === "userPasswordConfirm") {
-      setPasswordConfirm(value);
-    } else if (name === "displayName") {
-      setDisplayName(value);
     }
   };
   
-  const handleSubmit = async (event, email, password, passwordConfirm) => {
+  const handleSubmit = async (event, email, password) => {
     event.preventDefault();
-
-    if(password !== passwordConfirm){
-      return setError('Passwords do not match. Please try again.')
-    }
 
     try{
       setError('')
       setLoading(true)
-      const {user} = await auth.createUserWithEmailAndPassword(email, password);
-      generateUserDocument(user, {displayName});
+      auth.signInWithEmailAndPassword(email, password)
+
       history.push("/profile")
     }
     catch(error){
-      setError('Failed to create an account');
+      setError('Error signing in with password and email');
     }
 
     setEmail("");
     setPassword("");
-    setPasswordConfirm("");
-    setDisplayName("");
     setLoading(false)
   };
 
-  const handleGoogleSignUp = async(event) => {
+  const handleGoogleLogIn = async(event) => {
     event.preventDefault();
     try{
       setError('')
@@ -62,15 +50,10 @@ const SignUp = () => {
       await signInWithGoogle()
       history.push("/profile")
     } catch {
-      setError('Failed to create an account using Google')
+      setError('Failed to sign in using Google')
     }
     setLoading(false)
-
-
   }
-
-  
-  
 
   return (
     <Container 
@@ -80,20 +63,9 @@ const SignUp = () => {
       <div className="w-100" style={{ maxWidth: "400px" }}>
         <Card>
           <Card.Body>
-            <h2 className = "text-center mb-4">Sign Up</h2>
+            <h2 className = "text-center mb-4">Log In</h2>
             {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={e => handleSubmit(e, email, password, passwordConfirm)}>
-              <Form.Group>
-                <Form.Label>Display Name</Form.Label>
-                <Form.Control 
-                type="text"
-                placeholder="Elon Musk" 
-                name="displayName"
-                value = {displayName}
-                id="displayName"
-                onChange = {(event) => onChangeHandler(event)}
-                required />
-              </Form.Group>
+            <Form onSubmit={e => handleSubmit(e, email, password)}>
               <Form.Group id="email">
                 <Form.Label>Email</Form.Label>
                 <Form.Control 
@@ -116,21 +88,13 @@ const SignUp = () => {
                 onChange = {(event) => onChangeHandler(event)}
                 required />
               </Form.Group>
-              <Form.Group id="passwordConfirm">
-                <Form.Label>Confirm password</Form.Label>
-                <Form.Control 
-                type="password" 
-                placeholder="**********"
-                name="userPasswordConfirm"
-                value = {passwordConfirm}
-                id="userPasswordConfirm"
-                onChange = {(event) => onChangeHandler(event)}  
-                required />
-              </Form.Group>
-              <Button disabled={loading} className="w-100 mt-3" type="submit">Sign up</Button>
+              <Button disabled={loading} className="w-100 mt-3" type="submit">Log in</Button>
             </Form>
             <Button disabled={loading} className="w-100 bg-dark mt-2"
-              onClick={handleGoogleSignUp}>Sign in with Google</Button>
+              onClick={handleGoogleLogIn}>Sign in with Google</Button>
+            <div className="w-100 text-center mt-3">
+              <Link to="/forgotPassword">Forgot password?</Link>
+            </div>
           </Card.Body>
         </Card>
         <div className="w-100 text-center mt-2">

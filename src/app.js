@@ -74,7 +74,6 @@ import UserProvider from "./providers/UserProvider";
 // };
 
 const App = () => {
-  const user = null;
   return (
     <UserProvider>
       <Application />

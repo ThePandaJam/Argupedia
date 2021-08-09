@@ -1,7 +1,7 @@
 import { IconButton, Text, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
-import db from "../lib/firebase";
+import { firestore }  from "../lib/firebase";
 
 const VoteButtons = ({ post }) => {
   const [isVoting, setVoting] = useState(false);
@@ -52,7 +52,7 @@ const VoteButtons = ({ post }) => {
       downVotesCount = downVotesCount + 1;
     }
 
-    await db.collection("posts").doc(post.id).set({
+    await firestore.collection("posts").doc(post.id).set({
       title: post.title,
       upVotesCount,
       downVotesCount,

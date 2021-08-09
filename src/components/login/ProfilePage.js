@@ -1,10 +1,11 @@
 // https://chakra-templates.dev/page-sections/features
 // https://chakra-templates.dev/components/cards
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
-import React , { useContext } from "react";
-import { Container, Card , Button, Row, Col, Tabs, Tab } from 'react-bootstrap'
+import React , { useContext, useState } from "react";
+import { Container, Card , Button, Row, Col, Tabs, Tab, Alert } from 'react-bootstrap'
 import { BiLogOut, BiPencil } from "react-icons/bi";
 import { GrGraphQl, GrStatusGood } from "react-icons/gr";
+import { Link, useHistory } from 'react-router-dom';
 
 import { UserContext } from "../../providers/UserProvider";
 import {auth} from "../../lib/firebase";
@@ -32,6 +33,24 @@ const userArgs = Array.apply(null, Array(8)).map(function (x, i) {
 const ProfilePage = () => {
     const user = useContext(UserContext);
     const {photoURL, displayName, email} = user;
+
+    const [error, setError] = useState("")
+    const history = useHistory
+
+    async function handleLogout(){
+        setError('')
+    
+        try {
+          await auth.signOut()
+          //TODO: change to homepage for a user not signed in
+          history.push("/login")
+    
+        } catch {
+          setError("Failed to log out")
+        }
+    
+      }
+
     return (
         <>
         <Container>
@@ -45,8 +64,8 @@ const ProfilePage = () => {
                                     <div className="mt-3">
                                         <h4>{displayName}</h4>
                                         <p className="text-secondary mb-2">{email}</p>
-                                        <Button variant="primary" onClick = {() => {auth.signOut()}}><BiLogOut fill="white"/>Log out</Button>
-                                        <Button variant="outline-primary"><BiPencil/>Edit profile</Button>
+                                        <Button variant="primary" onClick={handleLogout}><BiLogOut fill="white"/>Log out</Button>
+                                        {error && <Alert variant="danger">{error}</Alert>}
                                     </div>
                                 </div>
                             </Card.Body>

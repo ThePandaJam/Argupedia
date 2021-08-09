@@ -2,150 +2,91 @@
 // https://chakra-templates.dev/components/cards
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 import React , { useContext } from "react";
-import {
-    Box,
-    Center,
-    useColorModeValue,
-    Heading,
-    Text,
-    Stack,
-    HStack,
-    VStack,
-    Image,
-    Container,
-    SimpleGrid,
-    Icon,
-    Button,
-  } from '@chakra-ui/react';
-import { BiPencil } from "react-icons/bi";
+import { Container, Card , Button, Row, Col, Tabs, Tab } from 'react-bootstrap'
+import { BiLogOut, BiPencil } from "react-icons/bi";
+import { GrGraphQl, GrStatusGood } from "react-icons/gr";
+
 import { UserContext } from "../../providers/UserProvider";
 import {auth} from "../../lib/firebase";
 
-const IMAGE = `https://res.cloudinary.com/dqcsk8rsc/image/upload/v1577268053/avatar-1-bitmoji_upgwhc.png`;
+const IMAGE = `http://detecta.com.br/admin/custom_img/unknown-user.png`;
 
 // Replace test data with posts from user
 const userPosts = Array.apply(null, Array(8)).map(function (x, i) {
     return {
       id: i,
-      title: 'Lorem ipsum dolor sit amet',
+      title: 'My Post',
       text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.',
     };
   });
+
+  // Replace test data with arguments from user
+const userArgs = Array.apply(null, Array(8)).map(function (x, i) {
+    return {
+        id: i,
+        title: 'My Argument',
+        text: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam.',
+    };
+});
   
 const ProfilePage = () => {
     const user = useContext(UserContext);
     const {photoURL, displayName, email} = user;
     return (
-        <Box p={4}>
-            <Center py={12}>
-                <Box
-                    role={'group'}
-                    p={6}
-                    maxW={'330px'}
-                    w={'full'}
-                    bg={useColorModeValue('white', 'gray.800')}
-                    boxShadow={'2xl'}
-                    rounded={'lg'}
-                    pos={'relative'}
-                    zIndex={1}>
-                    <Box
-                        rounded={'lg'}
-                        mt={-12}
-                        pos={'relative'}
-                        height={'230px'}
-                        _after={{
-                            transition: 'all .3s ease',
-                            content: '""',
-                            w: 'full',
-                            h: 'full',
-                            pos: 'absolute',
-                            top: 5,
-                            left: 0,
-                            backgroundImage: `url(${IMAGE})`,
-                            filter: 'blur(15px)',
-                            zIndex: -1,
-                        }}
-                        _groupHover={{
-                            _after: {
-                            filter: 'blur(20px)',
-                            },
-                        }}>
-                            <Image
-                                rounded={'lg'}
-                                height={230}
-                                width={282}
-                                objectFit={'cover'}
-                                src={`url(${photoURL || IMAGE})`}
-                            />
-                    </Box>
-                    <Stack pt={10} align={'center'}>
-                        <Heading fontSize={'2xl'} fontFamily={'body'} fontWeight={500}>
-                            {displayName}
-                        </Heading>
-                        <Stack direction={'row'} align={'center'}>
-                            <Text fontWeight={800} fontSize={'xl'}>
-                                {email}
-                            </Text>
-                        </Stack>
-                        <Button
-                            size="sm"
-                            rounded="md"
-                            color={["primary.500", "primary.500", "white", "white"]}
-                            bg={["white", "white", "primary.500", "primary.500"]}
-                            _hover={{
-                            bg: ["primary.100", "primary.100", "primary.600", "primary.600"]
-                            }}
-                            onClick = {() => {auth.signOut()}}>
-                            Sign out
-                        </Button>
-                    </Stack>
-                </Box>
-            </Center>
-            <Stack spacing={4} as={Container} maxW={'3xl'} textAlign={'center'}>
-                <Heading fontSize={'3xl'}>This is the headline</Heading>
-                <Text color={'gray.600'} fontSize={'xl'}>
-                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-                    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-                    sed diam voluptua.
-                </Text>
-            </Stack>
-
-            <Container maxW={'6xl'} mt={10}>
-                <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={10}>
-                    {userPosts.map((post) => (
-                    <HStack key={post.id} align={'top'}>
-                        <Box color={'green.400'} px={2}>
-                        <Icon as={BiPencil} />
-                        </Box>
-                        <VStack align={'start'}>
-                        <Text fontWeight={600}>{post.title}</Text>
-                        <Text color={'gray.600'}>{post.text}</Text>
-                        </VStack>
-                    </HStack>
-                    ))}
-                </SimpleGrid>
-            </Container>
-        </Box>
+        <>
+        <Container>
+            <div className="w-100">
+                <Row className="gutters-sm">
+                    <Col className="col-md-4 mb-3">
+                        <Card>
+                            <Card.Body>
+                                <div className="d-flex flex-column align-items-center text-center">
+                                    <img src={photoURL || IMAGE} alt="User Image" className="rounded-circle" width="150"/>
+                                    <div className="mt-3">
+                                        <h4>{displayName}</h4>
+                                        <p className="text-secondary mb-2">{email}</p>
+                                        <Button variant="primary" onClick = {() => {auth.signOut()}}><BiLogOut fill="white"/>Log out</Button>
+                                        <Button variant="outline-primary"><BiPencil/>Edit profile</Button>
+                                    </div>
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                    <Col className="md-8" style={{ minWidth: "600px" }}>
+                        {/* tabs */}
+                        <Tabs defaultActiveKey="posts" className="w-100">
+                            <Tab eventKey="posts" title="Posts">
+                                <Row className=" gutters-sm">
+                                {userPosts.map((post) => (
+                                        <Card key={post.id}>
+                                            <Card.Body>
+                                            <Card.Title><GrGraphQl/>{post.title}</Card.Title>
+                                            <Card.Text>{post.text}</Card.Text> 
+                                            </Card.Body>
+                                        </Card>
+                                ))}
+                                </Row>
+                            </Tab>
+                            <Tab eventKey="arguments" title="Arguments">
+                                <Row className=" gutters-sm">
+                                {userArgs.map((argument) => (
+                                        <Card key={argument.id}>
+                                            <Card.Body>
+                                            <Card.Title><GrStatusGood/>{argument.title}</Card.Title>
+                                            <Card.Text>{argument.text}</Card.Text> 
+                                            </Card.Body>
+                                        </Card>
+                                ))}
+                                </Row>
+                            </Tab>
+                        </Tabs>
+                        
+                    </Col>
+                </Row>
+            </div>
+        </Container>
+    </>
     
-    // <div className = "mx-auto w-11/12 md:w-2/4 py-8 px-4 md:px-8">
-    //   <div className="flex border flex-col items-center md:flex-row md:items-start border-blue-400 px-3 py-4">
-    //     <div
-    //       style={{
-    //         background:
-    //             `url(https://res.cloudinary.com/dqcsk8rsc/image/upload/v1577268053/avatar-1-bitmoji_upgwhc.png)  no-repeat center center`,
-    //         backgroundSize: "cover",
-    //         height: "200px",
-    //         width: "200px"
-    //       }}
-    //       className="border border-blue-300"
-    //     ></div>
-    //     <div className = "md:pl-4">
-    //     <h2 className = "text-2xl font-semibold">Faruq</h2>
-    //     <h3 className = "italic">faruq123@gmail.com</h3>
-    //     </div>
-    //   </div>
-    //   <button className = "w-full py-3 bg-red-600 mt-4 text-white">Sign out</button>
-    // </div>
     ); 
 };
 export default ProfilePage;

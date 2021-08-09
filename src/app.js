@@ -1,5 +1,6 @@
-import { Container, Flex, Spinner, VStack } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { Container, Flex, Spinner, VStack } from "@chakra-ui/react";
+
 import { Router } from "@reach/router";
 import AddNewPost from "./components/AddNewPost";
 import NavBar from "./components/navbar/Header";
@@ -8,6 +9,10 @@ import { firestore } from "./lib/firebase";
 
 import Application from "./components/Application";
 import UserProvider from "./providers/UserProvider";
+
+import Navbar from "./components/navbar";
+import Post from "./components/post";
+import db from "./lib/firebase";
 
 // const App = () => {
 //   const [posts, setPosts] = useState([]);
@@ -79,7 +84,6 @@ const App = () => {
       <Application />
     </UserProvider>
   );
-
 };
 
 export default App;

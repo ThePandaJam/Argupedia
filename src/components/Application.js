@@ -10,7 +10,7 @@ import UpdateProfile from "./login/UpdateProfile";
 import ForgotPassword from "./login/ForgotPassword";
 import LogIn from "./login/LogIn"
 import SignUp from "./login/SignUp"
-import HomePage from "./HomePage";
+import HomePage from "./forum/HomePage";
 import PrivateRoute from "./login/PrivateRoute";
 
 

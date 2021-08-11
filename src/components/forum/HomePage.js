@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Container, Flex, Spinner, VStack } from "@chakra-ui/react";
+import { Container, Spinner, Col } from "react-bootstrap";
 
-import { Router } from "@reach/router";
 import AddNewPost from "./AddNewPost";
-import NavBar from "./navbar/Header";
 import Post from "./post";
-import { firestore } from "../lib/firebase";
-import Header from "./navbar/Header";
+import { firestore } from "../../lib/firebase";
+import Header from "../navbar/Header";
 
 export default function HomePage() {
     const [posts, setPosts] = useState([]);
@@ -51,22 +49,30 @@ export default function HomePage() {
 
     if (isLoading) {
         return (
-        <Flex minH="100vh" justifyContent="center" alignItems="center">
-            <Spinner />
-        </Flex>
+            <Container 
+            className="d-flex align-items-center justify-content-center"
+            style={{ minHeight: "100vh" }}
+            >
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            </Container>
         );
     }
 
     return (
         <>
         <Header />
-        <Container maxW="md" centerContent p={8}>
-            <AddNewPost spacing={8}/>
-            <VStack spacing={8} w="100%">
+        <Container 
+        className="flex align-items-center justify-content-center"
+        style={{ minHeight: "100vh", maxWidth: "700px" }}
+        >
+            <AddNewPost xs={8}/>
+            <Col xs={8} className="w-100">
             {posts.map((post) => (
                 <Post post={post} key={post.id} />
             ))}
-            </VStack>
+            </Col>
         </Container>
         </>
     );

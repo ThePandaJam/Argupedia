@@ -1,7 +1,8 @@
 import { IconButton, Text, VStack } from "@chakra-ui/react";
+import {  Button, ButtonGroup, Col, Row } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp } from "react-icons/fi";
-import { firestore }  from "../lib/firebase";
+import { firestore }  from "../../lib/firebase";
 
 const VoteButtons = ({ post }) => {
   const [isVoting, setVoting] = useState(false);
@@ -76,34 +77,30 @@ const VoteButtons = ({ post }) => {
 
   return (
     <>
-      <VStack>
-        <IconButton
-          size="lg"
-          colorScheme="purple"
-          aria-label="Upvote"
-          icon={<FiArrowUp />}
-          onClick={() => handleClick("upvote")}
-          isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted()}
-        />
-        <Text bg="gray.100" rounded="md" w="100%" p={1}>
-          {post.upVotesCount}
-        </Text>
-      </VStack>
-      <VStack>
-        <IconButton
-          size="lg"
-          colorScheme="yellow"
-          aria-label="Downvote"
-          icon={<FiArrowDown />}
-          onClick={() => handleClick("downvote")}
-          isLoading={isVoting}
-          isDisabled={checkIfPostIsAlreadyVoted()}
-        />
-        <Text bg="gray.100" rounded="md" w="100%" p={1}>
-          {post.downVotesCount}
-        </Text>
-      </VStack>
+        <Col>
+          <Button 
+            variant="primary" 
+            size="lg"
+            aria-label="Upvote"
+            onClick={() => handleClick("upvote")}
+            disabled={isVoting || checkIfPostIsAlreadyVoted()}
+            >
+            <FiArrowUp />
+          </Button>
+            <h2>{post.upVotesCount}</h2>
+        </Col>
+        <Col>
+          <Button 
+            variant="warning" 
+            size="lg"
+            aria-label="Downvote"
+            onClick={() => handleClick("downvote")}
+            disabled={isVoting || checkIfPostIsAlreadyVoted()}
+            >
+            <FiArrowDown />
+          </Button>
+          <h2>{post.downVotesCount}</h2>
+        </Col>
     </>
   );
 };

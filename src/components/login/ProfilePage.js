@@ -69,11 +69,10 @@ export default function ProfilePage() {
                                     <div className="mt-3">
                                         <h4>{currentUser.displayName || anonUser}</h4>
                                         <p className="text-secondary mb-2">{currentUser.email}</p>
-                                        <ButtonGroup>
-                                            <Button variant="primary" onClick={handleLogout}><BiLogOut fill="white"/>Log out</Button>
-                                            <Button variant="outline-primary"><Link to="/updateProfile">Update Profile</Link></Button>
+                                        <ButtonGroup className="w-100">
+                                            <Button variant="primary" onClick={handleLogout}><BiLogOut />Log out</Button>
+                                            <Link to="/updateProfile" className="btn btn-outline-primary"><BiPencil />Update Profile</Link>
                                         </ButtonGroup>
-                                        
                                         {error && <Alert variant="danger">{error}</Alert>}
                                     </div>
                                 </div>

@@ -2,15 +2,18 @@
 // https://chakra-templates.dev/components/cards
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 import React , { useContext, useState } from "react";
-import { Container, Card , Button, Row, Col, Tabs, Tab, Alert } from 'react-bootstrap'
+import { Container, Card , Button, Row, Col, Tabs, Tab, Alert, ButtonGroup } from 'react-bootstrap'
 import { BiLogOut, BiPencil } from "react-icons/bi";
 import { GrGraphQl, GrStatusGood } from "react-icons/gr";
 import { Link, useHistory } from 'react-router-dom';
 
 import { UserContext } from "../../providers/UserProvider";
 import {auth} from "../../lib/firebase";
+import { useAuth } from "../../contexts/AuthContext";
+import Header from "../navbar/Header";
 
 const IMAGE = `http://detecta.com.br/admin/custom_img/unknown-user.png`;
+const anonUser = 'Anonymous'
 
 // Replace test data with posts from user
 const userPosts = Array.apply(null, Array(8)).map(function (x, i) {
@@ -30,18 +33,19 @@ const userArgs = Array.apply(null, Array(8)).map(function (x, i) {
     };
 });
   
-const ProfilePage = () => {
-    const user = useContext(UserContext);
-    const {photoURL, displayName, email} = user;
-
+export default function ProfilePage() {
     const [error, setError] = useState("")
+    const {currentUser, logout} = useAuth()
     const history = useHistory
+
+    console.log("user:", currentUser);
+    //console.log("photoURL, displayName, email:", photoURL, displayName,email)
 
     async function handleLogout(){
         setError('')
     
         try {
-          await auth.signOut()
+          await logout()
           //TODO: change to homepage for a user not signed in
           history.push("/login")
     
@@ -53,6 +57,7 @@ const ProfilePage = () => {
 
     return (
         <>
+        <Header />
         <Container>
             <div className="w-100">
                 <Row className="gutters-sm">
@@ -60,11 +65,15 @@ const ProfilePage = () => {
                         <Card>
                             <Card.Body>
                                 <div className="d-flex flex-column align-items-center text-center">
-                                    <img src={photoURL || IMAGE} alt="User Image" className="rounded-circle" width="150"/>
+                                    <img src={currentUser.photoURL || IMAGE} alt="User Image" className="rounded-circle" width="150"/>
                                     <div className="mt-3">
-                                        <h4>{displayName}</h4>
-                                        <p className="text-secondary mb-2">{email}</p>
-                                        <Button variant="primary" onClick={handleLogout}><BiLogOut fill="white"/>Log out</Button>
+                                        <h4>{currentUser.displayName || anonUser}</h4>
+                                        <p className="text-secondary mb-2">{currentUser.email}</p>
+                                        <ButtonGroup>
+                                            <Button variant="primary" onClick={handleLogout}><BiLogOut fill="white"/>Log out</Button>
+                                            <Button variant="outline-primary"><Link to="/updateProfile">Update Profile</Link></Button>
+                                        </ButtonGroup>
+                                        
                                         {error && <Alert variant="danger">{error}</Alert>}
                                     </div>
                                 </div>
@@ -105,7 +114,5 @@ const ProfilePage = () => {
             </div>
         </Container>
     </>
-    
     ); 
-};
-export default ProfilePage;
+}

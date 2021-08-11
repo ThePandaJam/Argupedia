@@ -4,22 +4,15 @@ import React, { useRef, useState } from 'react'
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { auth } from '../../lib/firebase'
+import Header from '../navbar/Header'
+import { useAuth } from '../../contexts/AuthContext'
 
 export default function ForgotPassword() {
-  //const emailRef = useRef()
-  //const { resetPassword } = useAuth()
+  const emailRef = useRef()
+  const { resetPassword } = useAuth()
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState("")
-
-  const onChangeHandler = event => {
-    const { name, value } = event.currentTarget;
-    if (name === "userEmail") {
-      setEmail(value);
-    }
-  };
-
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -27,7 +20,8 @@ export default function ForgotPassword() {
     try{
       setMessage('')
       setError('')
-      await auth.sendPasswordResetEmail(email)
+      setLoading(true)
+      await resetPassword(emailRef.current.value)
       setMessage('Check your inbox for further instructions.')
     } catch {
       setError('Failed to reset password')
@@ -36,6 +30,8 @@ export default function ForgotPassword() {
   }
 
   return (
+    <>
+      <Header />
       <Container 
         className="d-flex align-items-center justify-content-center"
         style={{ minHeight: "100vh" }}
@@ -49,14 +45,7 @@ export default function ForgotPassword() {
               <Form onSubmit={handleSubmit}>
                 <Form.Group id="email">
                   <Form.Label>Email</Form.Label>
-                  <Form.Control 
-                  type="email"
-                  placeholder="elon.musk@spacex.com" 
-                  name="userEmail"
-                  value = {email}
-                  id="userEmail"
-                  onChange = {(event) => onChangeHandler(event)}
-                  required />
+                  <Form.Control type="email" ref={emailRef} placeholder="elon.musk@spacex.com" required />
                 </Form.Group>
                 <Button disabled={loading} className="w-100 mt-2" type="submit">Reset password</Button>
               </Form>
@@ -66,9 +55,10 @@ export default function ForgotPassword() {
             </Card.Body>
           </Card>
           <div className="w-100 text-center mt-2">
-          Don't have an account? <Link to="/signUp">Sign up here</Link> 
+            Don't have an account? <Link to="/signup">Sign up here</Link> 
           </div>
         </div>
       </Container>
+    </>
   )
 }

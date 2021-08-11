@@ -1,53 +1,45 @@
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 // https://github.com/WebDevSimplified/React-Firebase-Auth
 
-import React, { useState } from "react";
-import { auth, signInWithGoogle } from "../../lib/firebase";
+import React, { useRef, useState } from "react";
+import { auth } from "../../lib/firebase";
+import { useAuth } from "../../contexts/AuthContext";
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
+import Header from "../navbar/Header";
 
 
-const SignUp = () => {
+export default function LogIn() {
+  const emailRef = useRef()
+  const passwordRef = useRef()
+  const { login, signInWithGoogle } = useAuth()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const history = useHistory()
-
-  const onChangeHandler = event => {
-    const { name, value } = event.currentTarget;
-    if (name === "userEmail") {
-      setEmail(value);
-    } else if (name === "userPassword") {
-      setPassword(value);
-    }
-  };
   
-  const handleSubmit = async (event, email, password) => {
-    event.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault()
 
     try{
       setError('')
       setLoading(true)
-      auth.signInWithEmailAndPassword(email, password)
-
+      const currentUser = await login(emailRef.current.value, passwordRef.current.value)
+      console.log("currentUser = ", currentUser)
       history.push("/profile")
+    } catch {
+      setError('Failed to sign in')
     }
-    catch(error){
-      setError('Error signing in with password and email');
-    }
-
-    setEmail("");
-    setPassword("");
     setLoading(false)
-  };
+  }
 
-  const handleGoogleLogIn = async(event) => {
-    event.preventDefault();
+  async function handleGoogleSignIn(e) {
+    e.preventDefault()
+
     try{
       setError('')
       setLoading(true)
-      await signInWithGoogle()
+      const currentUser = await signInWithGoogle()
+      console.log("currentUser = ", currentUser)
       history.push("/profile")
     } catch {
       setError('Failed to sign in using Google')
@@ -56,52 +48,40 @@ const SignUp = () => {
   }
 
   return (
-    <Container 
-      className="d-flex align-items-center justify-content-center"
-      style={{ minHeight: "100vh" }}
-      >
-      <div className="w-100" style={{ maxWidth: "400px" }}>
-        <Card>
-          <Card.Body>
-            <h2 className = "text-center mb-4">Log In</h2>
-            {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={e => handleSubmit(e, email, password)}>
-              <Form.Group id="email">
-                <Form.Label>Email</Form.Label>
-                <Form.Control 
-                type="email"
-                placeholder="elon.musk@spacex.com" 
-                name="userEmail"
-                value = {email}
-                id="userEmail"
-                onChange = {(event) => onChangeHandler(event)}
-                required />
-              </Form.Group>
-              <Form.Group id="password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control 
-                type="password"
-                placeholder="**********" 
-                name="userPassword"
-                value = {password}
-                id="userPassword"
-                onChange = {(event) => onChangeHandler(event)}
-                required />
-              </Form.Group>
-              <Button disabled={loading} className="w-100 mt-3" type="submit">Log in</Button>
-            </Form>
-            <Button disabled={loading} className="w-100 bg-dark mt-2"
-              onClick={handleGoogleLogIn}>Sign in with Google</Button>
-            <div className="w-100 text-center mt-3">
-              <Link to="/forgotPassword">Forgot password?</Link>
-            </div>
-          </Card.Body>
-        </Card>
-        <div className="w-100 text-center mt-2">
-          Aready have an account? <Link to="/login">Log in here</Link>
+    <>
+      <Header />
+      <Container 
+        className="d-flex align-items-center justify-content-center"
+        style={{ minHeight: "100vh" }}
+        >
+        <div className="w-100" style={{ maxWidth: "400px" }}>
+          <Card>
+            <Card.Body>
+              <h2 className = "text-center mb-4">Log In</h2>
+              {error && <Alert variant="danger">{error}</Alert>}
+              <Form onSubmit={handleSubmit}>
+                <Form.Group id="email">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control type="email" ref={emailRef} placeholder="elon.musk@spacex.com" required />
+                </Form.Group>
+                <Form.Group id="password" className="mt-2">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control type="password" ref={passwordRef} placeholder="**********" required />
+                </Form.Group>
+                <Button disabled={loading} className="w-100 mt-2" type="submit">Log In</Button>
+              </Form>
+              <Button disabled={loading} className="w-100 bg-dark mt-2"
+                onClick={handleGoogleSignIn}>Sign in with Google</Button>
+              <div className="w-100 text-center mt-3">
+                <Link to="/forgotPassword">Forgot password?</Link>
+              </div>
+            </Card.Body>
+          </Card>
+          <div className="w-100 text-center mt-2">
+            Don't have an account? <Link to="/signup">Sign up here</Link> 
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 };
-export default SignUp;

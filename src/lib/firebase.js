@@ -3,7 +3,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { functions } from "firebase";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -21,10 +20,7 @@ export const auth = firebase.auth();
 //this used to be named firestore in previous versions
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-export const signInWithGoogle = () => {
-  auth.signInWithPopup(provider);
-};
+export const provider = new firebase.auth.GoogleAuthProvider();
 
 export const generateUserDocument = async (user, additionalData) => {
   if (!user) return;

@@ -46,8 +46,7 @@ export default function ProfilePage() {
     
         try {
           await logout()
-          //TODO: change to homepage for a user not signed in
-          history.push("/login")
+          history.push("/")
     
         } catch {
           setError("Failed to log out")
@@ -70,8 +69,8 @@ export default function ProfilePage() {
                                         <h4>{currentUser.displayName || anonUser}</h4>
                                         <p className="text-secondary mb-2">{currentUser.email}</p>
                                         <ButtonGroup className="w-100">
-                                            <Button variant="primary" onClick={handleLogout}><BiLogOut />Log out</Button>
-                                            <Link to="/updateProfile" className="btn btn-outline-primary"><BiPencil />Update Profile</Link>
+                                            <Button variant="primary" onClick={handleLogout}><BiLogOut /> Log out</Button>
+                                            <Link to="/updateProfile" className="btn btn-outline-primary"><BiPencil /> Update Profile</Link>
                                         </ButtonGroup>
                                         {error && <Alert variant="danger">{error}</Alert>}
                                     </div>

@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { Row, Button, InputGroup, FormControl, Modal, Form, ButtonGroup } from "react-bootstrap";
 import { firestore } from "../../lib/firebase";
 import { BiPencil } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function AddNewPost() {
+  const {currentUser} = useAuth()
   const [title, setTitle] = useState("");
   const [isSaving, setSaving] = useState(false);
   const [show, setShow] = useState(false);
@@ -31,38 +34,24 @@ export default function AddNewPost() {
 
   return (
     <>
-      
-    <Row onClick={handleShow} className="w-100 flex-start mb-3">
-      <InputGroup size="lg">
-        <InputGroup.Text><BiPencil /></InputGroup.Text>
-        <FormControl as="textarea" aria-label="start-argument" placeholder = "Start a new debate" />
-      </InputGroup>
-    </Row>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Start a new debate</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group id="debateTitle">
-              <Form.Label>Topic of debate</Form.Label>
-                <Form.Control 
-                  type="text" 
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="An interesting debate topic" 
-                  required>
-
-                </Form.Control>
-            </Form.Group>
-            <ButtonGroup>
-              <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-              <Button variant="primary" onClick={handleSubmit} disabled={!title.trim() || isSaving}>Post</Button>
-            </ButtonGroup>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <div className="w-100 flex-start mb-3 mt-3">
+        {currentUser
+          ?<Link to="/makeNewDebate" className="btn btn-primary"><BiPencil /> Start a new debate</Link> 
+          :<Button variant="secondary" onClick={handleShow}><BiPencil /> Start a new debate</Button>
+        }
+      </div>
+        <Modal className="flex align-items-center justify-content-center" style={{ minHeight: "100vh" }} show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Log in or sign up to continue</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="align-items-center justify-content-center">
+              Experience Argupedia to its fullest potential with an account
+          </Modal.Body>
+          <Modal.Footer>
+            <Link to="/login" className="btn btn-primary">Log in</Link>
+            <Link to="/signUp" className="btn btn-secondary">Sign up</Link>
+          </Modal.Footer>
+        </Modal>
     </>
   );
 };

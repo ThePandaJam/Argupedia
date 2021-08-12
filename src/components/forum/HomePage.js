@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Container, Spinner, Col } from "react-bootstrap";
 
 import AddNewPost from "./AddNewPost";
-import Post from "./post";
+import Post from "./Post";
 import { firestore } from "../../lib/firebase";
 import Header from "../navbar/Header";
+import { useAuth } from "../../contexts/AuthContext";
 
 export default function HomePage() {
+    const {currentUser} = useAuth()
     const [posts, setPosts] = useState([]);
     const [isLoading, setLoading] = useState(true);
 

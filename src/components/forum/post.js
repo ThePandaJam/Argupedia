@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import VoteButtons from "./vote-buttons";
+import VoteButtons from "./VoteButtons";
 
 const Post = ({ post }) => {
   return (

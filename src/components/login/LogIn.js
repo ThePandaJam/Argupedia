@@ -25,7 +25,7 @@ export default function LogIn() {
       setLoading(true)
       const currentUser = await login(emailRef.current.value, passwordRef.current.value)
       console.log("currentUser = ", currentUser)
-      history.push("/profile")
+      history.push("/")
     } catch {
       setError('Failed to sign in')
     }
@@ -40,7 +40,7 @@ export default function LogIn() {
       setLoading(true)
       const currentUser = await signInWithGoogle()
       console.log("currentUser = ", currentUser)
-      history.push("/profile")
+      history.push("/")
     } catch {
       setError('Failed to sign in using Google')
     }

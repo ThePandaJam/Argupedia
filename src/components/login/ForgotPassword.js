@@ -3,7 +3,6 @@
 import React, { useRef, useState } from 'react'
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { auth } from '../../lib/firebase'
 import Header from '../navbar/Header'
 import { useAuth } from '../../contexts/AuthContext'
 

@@ -5,10 +5,8 @@ import AddNewPost from "./AddNewPost";
 import Post from "./Post";
 import { firestore } from "../../lib/firebase";
 import Header from "../navbar/Header";
-import { useAuth } from "../../contexts/AuthContext";
 
 export default function HomePage() {
-    const {currentUser} = useAuth()
     const [posts, setPosts] = useState([]);
     const [isLoading, setLoading] = useState(true);
 
@@ -64,18 +62,18 @@ export default function HomePage() {
 
     return (
         <>
-        <Header />
-        <Container 
-        className="flex align-items-center justify-content-center"
-        style={{ minHeight: "100vh", maxWidth: "700px" }}
-        >
-            <AddNewPost xs={8}/>
-            <Col xs={8} className="w-100">
-            {posts.map((post) => (
-                <Post post={post} key={post.id} />
-            ))}
-            </Col>
-        </Container>
+            <Header />
+            <Container 
+            className="flex align-items-center justify-content-center"
+            style={{ minHeight: "100vh", maxWidth: "700px" }}
+            >
+                <AddNewPost xs={8}/>
+                <Col xs={8} className="w-100">
+                {posts.map((post) => (
+                    <Post post={post} key={post.id} />
+                ))}
+                </Col>
+            </Container>
         </>
     );
 }

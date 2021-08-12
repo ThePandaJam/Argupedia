@@ -1,7 +1,6 @@
 // https://blog.logrocket.com/user-authentication-firebase-react-apps/
 
-import React, { useContext } from "react";
-import { UserContext } from "../providers/UserProvider";
+import React from "react";
 import { AuthProvider } from "../contexts/AuthContext";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
@@ -17,7 +16,6 @@ import MakeNewDebatePage from "./forum/MakeNewDebatePage";
 
 
 function Application() {
-  const user = useContext(UserContext);
   return (
     <Router>
       <AuthProvider>

@@ -1,36 +1,15 @@
 import React, { useState } from "react";
-import { Row, Button, InputGroup, FormControl, Modal, Form, ButtonGroup } from "react-bootstrap";
-import { firestore } from "../../lib/firebase";
+import { Button, Modal } from "react-bootstrap";
 import { BiPencil } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 
 export default function AddNewPost() {
   const {currentUser} = useAuth()
-  const [title, setTitle] = useState("");
-  const [isSaving, setSaving] = useState(false);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  const handleSubmit = async () => {
-    setSaving(true);
-
-    const date = new Date();
-
-    await firestore.collection("posts").add({
-      title,
-      upVotesCount: 0,
-      downVotesCount: 0,
-      createdAt: date.toUTCString(),
-      updatedAt: date.toUTCString(),
-    });
-
-    handleClose();
-    setTitle("");
-    setSaving(false);
-  };
 
   return (
     <>

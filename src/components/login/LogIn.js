@@ -2,7 +2,6 @@
 // https://github.com/WebDevSimplified/React-Firebase-Auth
 
 import React, { useRef, useState } from "react";
-import { auth } from "../../lib/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
@@ -23,8 +22,7 @@ export default function LogIn() {
     try{
       setError('')
       setLoading(true)
-      const currentUser = await login(emailRef.current.value, passwordRef.current.value)
-      console.log("currentUser = ", currentUser)
+      await login(emailRef.current.value, passwordRef.current.value)
       history.push("/")
     } catch {
       setError('Failed to sign in')
@@ -38,8 +36,7 @@ export default function LogIn() {
     try{
       setError('')
       setLoading(true)
-      const currentUser = await signInWithGoogle()
-      console.log("currentUser = ", currentUser)
+      await signInWithGoogle()
       history.push("/")
     } catch {
       setError('Failed to sign in using Google')

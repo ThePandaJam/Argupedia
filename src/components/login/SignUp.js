@@ -2,7 +2,6 @@
 // https://github.com/WebDevSimplified/React-Firebase-Auth
 
 import React, { useRef, useState } from "react";
-import { auth, generateUserDocument } from "../../lib/firebase";
 import { useAuth } from "../../contexts/AuthContext";
 import { Container, Card, Form , Button, Alert } from 'react-bootstrap'
 import { Link, useHistory } from 'react-router-dom'
@@ -30,7 +29,6 @@ export default function SignUp() {
       setError('')
       setLoading(true)
       await signup(emailRef.current.value, passwordRef.current.value);
-      //generateUserDocument(user, {displayName});
       history.push("/profile")
     }
     catch(error){

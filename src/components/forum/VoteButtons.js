@@ -54,6 +54,10 @@ const VoteButtons = ({ post }) => {
 
     await firestore.collection("posts").doc(post.id).set({
       title: post.title,
+      // scheme: post.scheme,
+      major_premise: post.major_premise,
+      minor_premise: post.minor_premise,
+      conclusion: post.conclusion,
       upVotesCount,
       downVotesCount,
       createdAt: post.createdAt,
